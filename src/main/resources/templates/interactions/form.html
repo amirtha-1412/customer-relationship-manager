@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle} + ' - CRM System'">Log Interaction - CRM System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" th:href="@{/dashboard}">
+                <i class="bi bi-diagram-3-fill me-2"></i>CRM System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/dashboard}">
+                            <i class="bi bi-speedometer2 me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/customers}">
+                            <i class="bi bi-people-fill me-1"></i>Customers
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/leads}">
+                            <i class="bi bi-clipboard2-data-fill me-1"></i>Leads
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/tasks}">
+                            <i class="bi bi-check2-square me-1"></i>Tasks
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/interactions}">
+                            <i class="bi bi-chat-dots-fill me-1"></i>Interactions
+                        </a>
+                    </li>
+                </ul>
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit" class="btn btn-outline-light btn-sm">
+                        <i class="bi bi-box-arrow-right me-1"></i>Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-7">
+
+                <!-- Page Header -->
+                <div class="mb-4">
+                    <h2 class="fw-bold mb-0" th:text="${pageTitle}">Log Interaction</h2>
+                    <p class="text-muted">Fill in the details below and click Save.</p>
+                </div>
+
+                <!-- Form Card -->
+                <div class="card shadow-sm border-0 rounded-3">
+                    <div class="card-body p-4">
+
+                        <form th:object="${interaction}"
+                              th:action="@{/interactions}"
+                              method="POST">
+
+                            <div class="row g-3">
+
+                                <!-- Customer ID -->
+                                <div class="col-md-6">
+                                    <label for="customerId" class="form-label fw-semibold">Customer ID</label>
+                                    <input type="number" id="customerId" th:field="*{customerId}"
+                                           class="form-control" placeholder="Enter customer ID" min="1">
+                                </div>
+
+                                <!-- User Name -->
+                                <div class="col-md-6">
+                                    <label for="userName" class="form-label fw-semibold">User Name</label>
+                                    <input type="text" id="userName" th:field="*{userName}"
+                                           class="form-control" placeholder="Enter sales user name">
+                                </div>
+
+                                <!-- Type Dropdown -->
+                                <div class="col-md-6">
+                                    <label for="type" class="form-label fw-semibold">Type</label>
+                                    <select id="type" th:field="*{type}" class="form-select" required>
+                                        <option value="">-- Select Type --</option>
+                                        <option value="CALL">Call</option>
+                                        <option value="EMAIL">Email</option>
+                                        <option value="MEETING">Meeting</option>
+                                    </select>
+                                </div>
+
+                                <!-- Interaction Date -->
+                                <div class="col-md-6">
+                                    <label for="interactionDate" class="form-label fw-semibold">Interaction Date</label>
+                                    <input type="datetime-local" id="interactionDate" th:field="*{interactionDate}"
+                                           class="form-control">
+                                </div>
+
+                                <!-- Notes -->
+                                <div class="col-12">
+                                    <label for="notes" class="form-label fw-semibold">Notes</label>
+                                    <textarea id="notes" th:field="*{notes}"
+                                              class="form-control" rows="5"
+                                              placeholder="Enter interaction notes..."></textarea>
+                                </div>
+
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="d-flex gap-2 mt-4">
+                                <button type="submit" class="btn btn-primary px-4">
+                                    <i class="bi bi-floppy-fill me-1"></i> Save
+                                </button>
+                                <a th:href="@{/interactions}" class="btn btn-outline-secondary px-4">
+                                    <i class="bi bi-x-circle me-1"></i> Cancel
+                                </a>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
