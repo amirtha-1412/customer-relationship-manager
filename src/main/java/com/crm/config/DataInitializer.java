@@ -23,22 +23,35 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Check if admin user already exists to avoid DuplicateKeyException
+        // Seed admin user
         Optional<User> existingAdmin = userRepository.findByUsername("admin");
-        
         if (existingAdmin.isEmpty()) {
             User adminUser = new User();
             adminUser.setUsername("admin");
-            // The password will be hashed via BCryptPasswordEncoder inside the UserService
-            adminUser.setPassword("admin123"); 
+            adminUser.setPassword("admin123");
             adminUser.setEmail("admin@crm.com");
             adminUser.setRole("ROLE_ADMIN");
             adminUser.setEnabled(true);
-            
             userService.registerUser(adminUser);
-            System.out.println("Default admin user created successfully! (username: admin, role: ROLE_ADMIN)");
+            System.out.println("Default admin user created. (username: admin, role: ROLE_ADMIN)");
         } else {
-            System.out.println("Admin user already exists in the database. Skipping initialization.");
+            System.out.println("Admin user already exists. Skipping initialization.");
+        }
+
+        // Seed sales user
+        Optional<User> existingSales = userRepository.findByUsername("sales");
+        if (existingSales.isEmpty()) {
+            User salesUser = new User();
+            salesUser.setUsername("sales");
+            salesUser.setPassword("sales123");
+            salesUser.setEmail("sales@crm.com");
+            salesUser.setRole("ROLE_SALES");
+            salesUser.setEnabled(true);
+            userService.registerUser(salesUser);
+            System.out.println("Default sales user created. (username: sales, role: ROLE_SALES)");
+        } else {
+            System.out.println("Sales user already exists. Skipping initialization.");
         }
     }
 }
+

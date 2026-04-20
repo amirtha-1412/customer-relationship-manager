@@ -12,14 +12,22 @@ import java.util.Optional;
 public class TaskService {
 
     private final TaskRepository taskRepository;
+    private final EmailService emailService;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository) {
+    public TaskService(TaskRepository taskRepository, EmailService emailService) {
         this.taskRepository = taskRepository;
+        this.emailService = emailService;
     }
 
     public Task saveTask(Task task) {
-        return taskRepository.save(task);
+        boolean isNewTask = (task.getId() == null);
+        Task savedTask = taskRepository.save(task);
+        // Send email notification only for newly created tasks
+        if (isNewTask) {
+            emailService.sendTaskCreatedNotification(savedTask);
+        }
+        return savedTask;
     }
 
     public List<Task> getAllTasks() {
@@ -45,3 +53,4 @@ public class TaskService {
         return Optional.empty();
     }
 }
+

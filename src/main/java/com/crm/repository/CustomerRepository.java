@@ -13,4 +13,9 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     List<Customer> findByFirstNameContaining(String keyword);
 
     Optional<Customer> findByEmail(String email);
+
+    List<Customer> findByFirstNameContainingIgnoreCase(String keyword);
+
+    List<Customer> findByEmailContainingIgnoreCase(String keyword);
 }
+

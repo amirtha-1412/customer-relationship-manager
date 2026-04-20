@@ -12,4 +12,11 @@ public interface LeadRepository extends JpaRepository<Lead, Long> {
     List<Lead> findByStatus(String status);
 
     List<Lead> findByAssignedTo(String assignedTo);
+
+    List<Lead> findTop5ByOrderByIdDesc();
+
+    List<Lead> findByNameContainingIgnoreCase(String keyword);
+
+    List<Lead> findByEmailContainingIgnoreCase(String keyword);
 }
+

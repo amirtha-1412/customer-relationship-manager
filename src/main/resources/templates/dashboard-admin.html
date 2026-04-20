@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - CRM System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" th:href="@{/dashboard}">
+                <i class="bi bi-diagram-3-fill me-2"></i>CRM System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/dashboard}">
+                            <i class="bi bi-speedometer2 me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/customers}">
+                            <i class="bi bi-people-fill me-1"></i>Customers
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/leads}">
+                            <i class="bi bi-clipboard2-data-fill me-1"></i>Leads
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/tasks}">
+                            <i class="bi bi-check2-square me-1"></i>Tasks
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/interactions}">
+                            <i class="bi bi-chat-dots-fill me-1"></i>Interactions
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/opportunities}">
+                            <i class="bi bi-currency-dollar me-1"></i>Opportunities
+                        </a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="text-white-50 small">
+                        <i class="bi bi-shield-fill-check me-1 text-warning"></i>
+                        <span sec:authentication="name">Admin</span> (Admin)
+                    </span>
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="btn btn-outline-light btn-sm">
+                            <i class="bi bi-box-arrow-right me-1"></i>Logout
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+
+        <!-- Page Header -->
+        <div class="mb-4">
+            <h2 class="fw-bold mb-0">
+                <i class="bi bi-shield-fill-check text-warning me-2"></i>Admin Dashboard
+            </h2>
+            <p class="text-muted">Full system overview and management</p>
+        </div>
+
+        <!-- Stat Cards -->
+        <div class="row g-4">
+            <div class="col-sm-6 col-xl-4">
+                <div class="card border-0 shadow-sm rounded-3 h-100">
+                    <div class="card-body d-flex align-items-center gap-3">
+                        <div class="fs-1 text-primary"><i class="bi bi-people-fill"></i></div>
+                        <div>
+                            <div class="text-muted small text-uppercase fw-semibold">Total Customers</div>
+                            <div class="fs-3 fw-bold" th:text="${totalCustomers}">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-4">
+                <div class="card border-0 shadow-sm rounded-3 h-100">
+                    <div class="card-body d-flex align-items-center gap-3">
+                        <div class="fs-1 text-warning"><i class="bi bi-clipboard2-data-fill"></i></div>
+                        <div>
+                            <div class="text-muted small text-uppercase fw-semibold">Total Leads</div>
+                            <div class="fs-3 fw-bold" th:text="${totalLeads}">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-4">
+                <div class="card border-0 shadow-sm rounded-3 h-100">
+                    <div class="card-body d-flex align-items-center gap-3">
+                        <div class="fs-1 text-info"><i class="bi bi-check2-square"></i></div>
+                        <div>
+                            <div class="text-muted small text-uppercase fw-semibold">Total Tasks</div>
+                            <div class="fs-3 fw-bold" th:text="${totalTasks}">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-6">
+                <div class="card border-0 shadow-sm rounded-3 h-100">
+                    <div class="card-body d-flex align-items-center gap-3">
+                        <div class="fs-1 text-secondary"><i class="bi bi-currency-dollar"></i></div>
+                        <div>
+                            <div class="text-muted small text-uppercase fw-semibold">Total Opportunities</div>
+                            <div class="fs-3 fw-bold" th:text="${totalOpportunities}">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-6">
+                <div class="card border-0 shadow-sm rounded-3 h-100 border-start border-success border-4">
+                    <div class="card-body d-flex align-items-center gap-3">
+                        <div class="fs-1 text-success"><i class="bi bi-graph-up-arrow"></i></div>
+                        <div>
+                            <div class="text-muted small text-uppercase fw-semibold">Total Revenue (WON)</div>
+                            <div class="fs-3 fw-bold text-success"
+                                 th:text="'₹ ' + ${#numbers.formatDecimal(totalRevenue, 1, 2)}">₹ 0.00</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Latest Leads Table -->
+        <div class="mt-5">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0"><i class="bi bi-clock-history me-2 text-primary"></i>Latest Leads</h5>
+                <a th:href="@{/leads}" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Source</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="lead : ${latestLeads}">
+                                    <td th:text="${lead.name}">Lead Name</td>
+                                    <td th:text="${lead.email}">email@example.com</td>
+                                    <td th:text="${lead.source}">Website</td>
+                                    <td>
+                                        <span th:text="${lead.status}"
+                                              th:classappend="${lead.status == 'NEW'} ? 'badge bg-info text-dark' :
+                                                              (${lead.status == 'CONTACTED'} ? 'badge bg-primary' :
+                                                              (${lead.status == 'QUALIFIED'} ? 'badge bg-success' : 'badge bg-danger'))"
+                                              class="badge">NEW</span>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(latestLeads)}">
+                                    <td colspan="4" class="text-center text-muted py-3">
+                                        No leads yet. <a th:href="@{/leads/new}">Add your first lead</a>.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

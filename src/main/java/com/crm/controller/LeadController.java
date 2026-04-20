@@ -3,10 +3,12 @@ package com.crm.controller;
 import com.crm.entity.Lead;
 import com.crm.service.LeadService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -20,13 +22,32 @@ public class LeadController {
         this.leadService = leadService;
     }
 
-    // GET /leads - Display all leads
+    // GET /leads?page=0&size=10&keyword=
     @GetMapping
-    public String getAllLeads(Model model) {
-        model.addAttribute("leads", leadService.getAllLeads());
+    public String getAllLeads(
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            Model model) {
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            // Search mode — no pagination
+            List<Lead> leads = leadService.searchLeads(keyword.trim());
+            model.addAttribute("leads", leads);
+            model.addAttribute("leadPage", null);
+        } else {
+            // Paginated mode
+            Page<Lead> leadPage = leadService.getLeadsPaged(page, size);
+            model.addAttribute("leads", leadPage.getContent());
+            model.addAttribute("leadPage", leadPage);
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", leadPage.getTotalPages());
+        }
+        model.addAttribute("keyword", keyword);
         model.addAttribute("pageTitle", "Leads");
         return "leads/list";
     }
+
+
 
     // GET /leads/new - Show form to create a new lead
     @GetMapping("/new")

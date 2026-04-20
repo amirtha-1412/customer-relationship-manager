@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Dashboard - CRM System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" th:href="@{/dashboard}">
+                <i class="bi bi-diagram-3-fill me-2"></i>CRM System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/dashboard}">
+                            <i class="bi bi-speedometer2 me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/leads}">
+                            <i class="bi bi-clipboard2-data-fill me-1"></i>Leads
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/tasks}">
+                            <i class="bi bi-check2-square me-1"></i>Tasks
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/opportunities}">
+                            <i class="bi bi-currency-dollar me-1"></i>Opportunities
+                        </a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="text-white-50 small">
+                        <i class="bi bi-person-circle me-1"></i>
+                        <span sec:authentication="name">Sales</span> (Sales)
+                    </span>
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="btn btn-outline-light btn-sm">
+                            <i class="bi bi-box-arrow-right me-1"></i>Logout
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+
+        <!-- Page Header -->
+        <div class="mb-4">
+            <h2 class="fw-bold mb-0">
+                <i class="bi bi-person-workspace text-success me-2"></i>Sales Dashboard
+            </h2>
+            <p class="text-muted">Welcome back, <strong th:text="${username}">sales</strong>! Here's your personal pipeline.</p>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row g-4 mb-5">
+            <div class="col-sm-4">
+                <div class="card border-0 shadow-sm rounded-3 h-100 border-start border-warning border-4">
+                    <div class="card-body d-flex align-items-center gap-3">
+                        <div class="fs-1 text-warning"><i class="bi bi-clipboard2-data-fill"></i></div>
+                        <div>
+                            <div class="text-muted small text-uppercase fw-semibold">My Leads</div>
+                            <div class="fs-3 fw-bold" th:text="${myLeads.size()}">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="card border-0 shadow-sm rounded-3 h-100 border-start border-info border-4">
+                    <div class="card-body d-flex align-items-center gap-3">
+                        <div class="fs-1 text-info"><i class="bi bi-check2-square"></i></div>
+                        <div>
+                            <div class="text-muted small text-uppercase fw-semibold">My Tasks</div>
+                            <div class="fs-3 fw-bold" th:text="${myTasks.size()}">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="card border-0 shadow-sm rounded-3 h-100 border-start border-success border-4">
+                    <div class="card-body d-flex align-items-center gap-3">
+                        <div class="fs-1 text-success"><i class="bi bi-currency-dollar"></i></div>
+                        <div>
+                            <div class="text-muted small text-uppercase fw-semibold">Opportunities</div>
+                            <div class="fs-3 fw-bold" th:text="${myOpportunities.size()}">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+
+            <!-- My Leads -->
+            <div class="col-lg-6">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0"><i class="bi bi-clipboard2-data-fill me-2 text-warning"></i>My Leads</h5>
+                    <a th:href="@{/leads}" class="btn btn-sm btn-outline-warning">View All</a>
+                </div>
+                <div class="card shadow-sm border-0 rounded-3">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-warning">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Source</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="lead : ${myLeads}">
+                                        <td th:text="${lead.name}">Lead Name</td>
+                                        <td th:text="${lead.source}">Website</td>
+                                        <td>
+                                            <span th:text="${lead.status}"
+                                                  th:classappend="${lead.status == 'NEW'} ? 'badge bg-info text-dark' :
+                                                                  (${lead.status == 'CONTACTED'} ? 'badge bg-primary' :
+                                                                  (${lead.status == 'QUALIFIED'} ? 'badge bg-success' : 'badge bg-danger'))"
+                                                  class="badge">NEW</span>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(myLeads)}">
+                                        <td colspan="3" class="text-center text-muted py-3">
+                                            No leads assigned to you yet.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Tasks -->
+            <div class="col-lg-6">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0"><i class="bi bi-check2-square me-2 text-info"></i>My Tasks</h5>
+                    <a th:href="@{/tasks}" class="btn btn-sm btn-outline-info">View All</a>
+                </div>
+                <div class="card shadow-sm border-0 rounded-3">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-info">
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Due Date</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="task : ${myTasks}">
+                                        <td th:text="${task.title}">Task Title</td>
+                                        <td th:text="${task.dueDate}">2026-01-01</td>
+                                        <td>
+                                            <span th:text="${task.status}"
+                                                  th:classappend="${task.status == 'COMPLETED'} ? 'badge bg-success' : 'badge bg-warning text-dark'"
+                                                  class="badge">PENDING</span>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(myTasks)}">
+                                        <td colspan="3" class="text-center text-muted py-3">
+                                            No tasks assigned to you yet.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Opportunities -->
+            <div class="col-12 mt-2">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0"><i class="bi bi-currency-dollar me-2 text-success"></i>My Opportunities</h5>
+                    <a th:href="@{/opportunities}" class="btn btn-sm btn-outline-success">View All</a>
+                </div>
+                <div class="card shadow-sm border-0 rounded-3">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-success">
+                                    <tr>
+                                        <th>Deal Name</th>
+                                        <th>Amount (₹)</th>
+                                        <th>Stage</th>
+                                        <th>Close Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="opp : ${myOpportunities}">
+                                        <td th:text="${opp.dealName}">Deal Name</td>
+                                        <td th:text="${#numbers.formatDecimal(opp.amount, 1, 2)}">0.00</td>
+                                        <td>
+                                            <span th:text="${opp.stage}"
+                                                  th:classappend="${opp.stage == 'WON'} ? 'badge bg-success' :
+                                                                  (${opp.stage == 'LOST'} ? 'badge bg-danger' :
+                                                                  (${opp.stage == 'NEGOTIATION'} ? 'badge bg-warning text-dark' : 'badge bg-info text-dark'))"
+                                                  class="badge">PROSPECT</span>
+                                        </td>
+                                        <td th:text="${opp.closeDate}">2026-12-31</td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(myOpportunities)}">
+                                        <td colspan="4" class="text-center text-muted py-3">
+                                            No opportunities found.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
