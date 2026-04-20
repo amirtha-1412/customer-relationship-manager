@@ -115,60 +115,60 @@ flowchart LR
 ```mermaid
 erDiagram
     users {
-        BIGINT id PK
-        VARCHAR username
-        VARCHAR password
-        VARCHAR email
-        VARCHAR role
-        BOOLEAN enabled
-        DATETIME created_at
+        int id PK
+        string username
+        string password
+        string email
+        string role
+        boolean enabled
+        string createdAt
     }
 
     customers {
-        BIGINT id PK
-        VARCHAR first_name
-        VARCHAR last_name
-        VARCHAR email
-        VARCHAR phone
-        VARCHAR company
-        VARCHAR status
+        int id PK
+        string firstName
+        string lastName
+        string email
+        string phone
+        string company
+        string status
     }
 
     leads {
-        BIGINT id PK
-        VARCHAR name
-        VARCHAR email
-        VARCHAR phone
-        VARCHAR source
-        VARCHAR status
-        VARCHAR assigned_to
+        int id PK
+        string name
+        string email
+        string phone
+        string source
+        string status
+        string assignedTo
     }
 
     tasks {
-        BIGINT id PK
-        VARCHAR title
-        TEXT description
-        DATE due_date
-        VARCHAR status
-        VARCHAR assigned_to
+        int id PK
+        string title
+        string description
+        date dueDate
+        string status
+        string assignedTo
     }
 
     interactions {
-        BIGINT id PK
-        BIGINT customer_id
-        VARCHAR user_name
-        VARCHAR type
-        TEXT notes
-        DATETIME interaction_date
+        int id PK
+        int customerId FK
+        string userName
+        string type
+        string notes
+        string interactionDate
     }
 
     opportunities {
-        BIGINT id PK
-        BIGINT customer_id
-        VARCHAR deal_name
-        DOUBLE amount
-        VARCHAR stage
-        DATE close_date
+        int id PK
+        int customerId FK
+        string dealName
+        float amount
+        string stage
+        date closeDate
     }
 
     customers ||--o{ interactions : "has"
